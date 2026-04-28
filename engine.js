@@ -11,7 +11,7 @@ class BGMManager {
     this.schedule = [];
     this.current_track_id = null;
     this.current_audio = null;
-    this.volume = 0.5;
+    this.volume = 0.15;
     this.fade_duration = 1200;
 
     if (bgm_config) {
