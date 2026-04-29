@@ -418,16 +418,19 @@ class GameEngine {
     const scene = this.scenes[this.state.current_scene];
     if (!scene) return;
 
-    // 检查是否播放完所有 beats
-    if (this.state.beat_index >= scene.beats.length) {
-      this._on_beats_finished(scene);
+    // 支持 beats 条件跳过：condition 返回 false 的 beat 自动跳过
+    while (this.state.beat_index < scene.beats.length) {
+      const beat = scene.beats[this.state.beat_index];
+      if (beat.condition && !beat.condition(this.state)) {
+        this.state.beat_index++;
+        continue;
+      }
+      this.state.beat_index++;
+      this._execute_beat(beat);
       return;
     }
 
-    const beat = scene.beats[this.state.beat_index];
-    this.state.beat_index++;
-
-    this._execute_beat(beat);
+    this._on_beats_finished(scene);
   }
 
   _execute_beat(beat) {

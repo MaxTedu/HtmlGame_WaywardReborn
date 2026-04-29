@@ -234,7 +234,8 @@ const CHAPTER1_DATA = {
         { type: 'char', id: 'coach', pos: 'center', enter: 'fade' },
         {
           type: 'text', speaker: 'coach',
-          content: 'Wayward！四点就打 GAM了！全队都在等你一个人！'
+          content: 'Wayward！四点就打 GAM了！全队都在等你一个人！',
+          effect: (s) => { s.affinity.coach = (s.affinity.coach || 0) - 4; }
         },
         { type: 'char', id: 'mark', pos: 'right', enter: 'slide' },
         {
@@ -480,7 +481,7 @@ const CHAPTER1_DATA = {
         {
           text: '（BP 席上争吵不休，各执一词……）',
           next: 'ch1_bad_02',
-          condition: (s) => (s.affinity.jackey || 0) < 30 && (s.affinity.coach || 0) < 30
+          condition: (s) => (s.affinity.coach || 0) < 48
         }
       ]
     },
@@ -492,11 +493,11 @@ const CHAPTER1_DATA = {
         { type: 'bg', asset: 'assets/bg/game_hud.jpg', transition: 'cut' },
         {
           type: 'text', speaker: null,
-          content: '【04:00 · TES vs GAM · 比赛开始】'
+          content: '【纽约现场 · 04:00 · TES vs GAM · 比赛开始】'
         },
         {
           type: 'text', speaker: null,
-          content: '【第六分钟。Tian 男枪抓中，Knight 阿狸闪现 E 命中 Kati 瑟提——一血！TES 率先打开局面。】'
+          content: '【现场解说：第六分钟。Tian 男枪抓中，Knight 阿狸闪现 E 命中 Kati 瑟提——一血！TES 率先打开局面！】'
         },
         { type: 'cg', asset: 'assets/cg/match_blood_first.jpg', overlay: 'First Blood · TES', darken: true, duration: 0 },
         {
@@ -505,19 +506,31 @@ const CHAPTER1_DATA = {
         },
         {
           type: 'text', speaker: null,
-          content: '【第十二分钟。下路 3v2，GAM 打野 Levi 蹲草，Mark 娜美走位靠前被烈娜塔 Q 中——Mark 阵亡。JackeyLove 交闪逃生。】'
+          content: '【现场解说：第十二分钟。下路 3v2，GAM 打野 Levi 蹲草，Mark 娜美走位靠前被烈娜塔 Q 中——Mark 阵亡！JackeyLove 交闪逃生。】'
         },
         {
           type: 'text', speaker: 'wayward',
-          content: '（和历史一样……下路还是被抓了。但这次不同，我们还有机会。）'
+          content: '（我记得历史里这波 Mark 死了……但这次不同。我改变了 BP，Levi 的节奏也变了。）'
         },
         {
           type: 'text', speaker: null,
-          content: '【第十九分钟。Tian 男枪抓上，Wayward 鳄鱼闪现 W 定住 Kiaya 奥恩——击杀！上路优势建立。】'
+          content: '【现场解说：第十九分钟。Tian 男枪抓上——Wayward 鳄鱼闪现 W 定住 Kiaya 奥恩！击杀！上路优势建立！】',
+          condition: (s) => s.flags.has('picked_croc') || !s.flags.has('picked_gnar')
+        },
+        {
+          type: 'text', speaker: null,
+          content: '【现场解说：第十九分钟。Tian 男枪抓上——Wayward 纳尔变大一巴掌把 Kiaya 奥恩拍到墙上！击杀！上路优势建立！】',
+          condition: (s) => s.flags.has('picked_gnar')
         },
         {
           type: 'text', speaker: 'wayward',
-          content: '（但 Levi 的死歌在野区发育得很好……他冰杖已经快做出来了。）'
+          content: '（但 Levi 的死歌在野区发育得很好……他冰杖已经快做出来了。）',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（Levi 拿不到死歌，整个 GAM 的节奏都乱了。这把有希望。）',
+          condition: (s) => s.flags.has('ban_karthus')
         }
       ],
       choices: [
@@ -539,36 +552,74 @@ const CHAPTER1_DATA = {
         { type: 'bg', asset: 'assets/bg/game_hud.jpg', transition: 'cut' },
         {
           type: 'text', speaker: null,
-          content: '【第二十七分钟。小龙团。GAM 土龙魂听牌，TES 必须接这波团。】'
+          content: '【纽约现场 · 第二十七分钟 · 小龙团】'
+        },
+        {
+          type: 'text', speaker: null,
+          content: '【现场解说：小龙团！GAM 土龙魂听牌，TES 必须接这波团。】'
         },
         { type: 'cg', asset: 'assets/cg/match_dragon_standoff.jpg', overlay: '土龙魂 · 听牌', darken: true, duration: 0 },
         {
           type: 'text', speaker: null,
-          content: '【Kiaya 奥恩在龙坑上方开大——羊来了！Kati 瑟提从侧面抱人进场！JackeyLove 被抱到！】'
+          content: '【现场解说：Kiaya 奥恩在龙坑上方开大——羊来了！Kati 瑟提从侧面抱人进场！JackeyLove 被抱到！】'
         },
         {
           type: 'text', speaker: null,
-          content: '【但最要命的是——Levi 在龙坑后面找到了完美位置。他的大招已经锁定了 TES 全员。】'
+          content: '【现场解说：但最要命的是——Levi 在龙坑后面找到了完美位置。死歌的大招已经锁定了 TES 全员！】',
+          condition: (s) => !s.flags.has('ban_karthus')
         },
-        { type: 'cg', asset: 'assets/cg/match_karthus_r.jpg', overlay: 'Levi 死歌 · 湮灭', darken: true, duration: 0 },
+        {
+          type: 'text', speaker: null,
+          content: '【现场解说：但这一把 Levi 拿的是佛耶戈——没有全图 R。TES 正面团战是 5v5！】',
+          condition: (s) => s.flags.has('ban_karthus')
+        },
         {
           type: 'text', speaker: 'wayward',
-          content: '他妈的！Levi 要在后面放大！'
+          content: '他妈的！Levi 要在后面放大！',
+          condition: (s) => !s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: 'tian',
-          content: '我在龙坑，没法打断他。你鳄鱼能不能 E 穿墙过去？'
+          content: 'Levi 没拿到死歌，但他佛耶戈捡魂收割还是猛，别给他送魂。',
+          condition: (s) => s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: 'wayward',
-          content: '（死歌如果放出大招，全员残血，这波团根本没法打。但如果我离场去找他，正面就少了一个前排……）'
+          content: '（ban 死歌是对的，Levi 没了绝活，威胁小了一半。）',
+          condition: (s) => s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'tian',
+          content: '我在龙坑，没法打断他。你鳄鱼能不能 E 穿墙过去？',
+          condition: (s) => (s.flags.has('picked_croc') || !s.flags.has('picked_gnar')) && !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'tian',
+          content: '我在龙坑，没法打断他。你纳尔变小跳过去干扰？',
+          condition: (s) => s.flags.has('picked_gnar') && !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（死歌如果放出大招，全员残血，这波团根本没法打。但如果我离场去找他，正面就少了一个前排……）',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（正面团 5v5，但佛耶戈捡魂起来一样可怕。得盯紧 Levi 的进场时机。）',
+          condition: (s) => s.flags.has('ban_karthus')
         }
       ],
       choices: [
         {
-          text: '找死歌打断 R！',
+          text: '鳄鱼开大深入野区找死歌打断 R！',
           next: 'ch1_012',
-          condition: (s) => s.flags.has('tian_gank_top'),
+          condition: (s) => s.flags.has('tian_gank_top') && !s.flags.has('ban_karthus') && (s.flags.has('picked_croc') || !s.flags.has('picked_gnar')),
+          effect: (s) => { s.flags.add('stopped_karthus_r'); s.affinity.tian = (s.affinity.tian || 0) + 2; }
+        },
+        {
+          text: '纳尔变小跳过去打断 Levi！',
+          next: 'ch1_012',
+          condition: (s) => s.flags.has('tian_gank_top') && !s.flags.has('ban_karthus') && s.flags.has('picked_gnar'),
           effect: (s) => { s.flags.add('stopped_karthus_r'); s.affinity.tian = (s.affinity.tian || 0) + 2; }
         },
         {
@@ -586,7 +637,11 @@ const CHAPTER1_DATA = {
         { type: 'bg', asset: 'assets/bg/game_hud.jpg', transition: 'cut' },
         {
           type: 'text', speaker: null,
-          content: '【第三十八分钟。远古龙团。GAM 已经 1 换 3，正在打远古龙。TES 只剩 JackeyLove 和 Tian 还活着。】'
+          content: '【纽约现场 · 第三十八分钟 · 远古龙团】'
+        },
+        {
+          type: 'text', speaker: null,
+          content: '【现场解说：第三十八分钟。远古龙团。GAM 已经 1 换 3，正在打远古龙。TES 只剩 JackeyLove 和 Tian 还活着。】'
         },
         {
           type: 'text', speaker: 'jackey',
@@ -598,25 +653,47 @@ const CHAPTER1_DATA = {
         },
         {
           type: 'text', speaker: null,
-          content: '【JackeyLove 卢锡安 E 上龙坑——惩戒！抢到了！！！远古龙到手！】'
+          content: '【现场解说：JackeyLove 卢锡安 E 上龙坑——惩戒！抢到了！！！远古龙到手！】'
         },
         { type: 'cg', asset: 'assets/cg/match_elder_steal.jpg', overlay: '远古龙 · 抢到！', darken: true, duration: 0 },
         {
           type: 'text', speaker: null,
-          content: '【Knight 阿狸复活赶到！魅惑命中！三杀！TES 团灭 GAM！】'
+          content: '【现场解说：Knight 阿狸复活赶到！魅惑命中！三杀！TES 团灭 GAM！】'
         },
         { type: 'cg', asset: 'assets/cg/match_ace.jpg', overlay: 'ACE · 团灭', darken: true, duration: 0 },
+        {
+          type: 'text', speaker: null,
+          content: '【现场解说：但 Levi 死歌复活甲还在——他 TP 绕后的路线已经就绪！TES 必须小心！】',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: null,
+          content: '【现场解说：Levi 佛耶戈想下来抢龙——但没有死歌的复活被动，他被 Knight 魅惑集火秒了！TES 轻松拿下远古龙！】',
+          condition: (s) => s.flags.has('ban_karthus')
+        },
         {
           type: 'text', speaker: 'jackey',
           content: '一波一波！直接拆！他们复活还有四十秒！'
         },
         {
           type: 'text', speaker: 'tian',
-          content: '稳一点。拿龙撤退。他们复活时间很长但死歌还有 TP。'
+          content: '稳一点。拿龙撤退。他们复活时间很长但死歌还有 TP。',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'tian',
+          content: '稳一点。拿龙撤退。佛耶戈没了，我们远古龙 Buff 够用了。',
+          condition: (s) => s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: 'mark',
-          content: '我……我没大招了兄弟们。不过话说回来我六岁那年玩死歌，TP 绕后这种事我干过好多次……'
+          content: '我……我没大招了兄弟们。不过话说回来我六岁那年玩死歌，TP 绕后这种事我干过好多次……',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'mark',
+          content: '我没大招了兄弟们。但对面少了 Levi 的主力输出，咱们这波稳了！哎说到稳，我六岁那年第一次打出五杀就是用的佛耶戈……',
+          condition: (s) => s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: 'wayward',
@@ -645,11 +722,11 @@ const CHAPTER1_DATA = {
         { type: 'cg', asset: 'assets/cg/match_base_push.jpg', overlay: 'GAM 基地 · 最后一搏', darken: true, duration: 0 },
         {
           type: 'text', speaker: null,
-          content: '【TES 带着远古龙 Buff 直奔 GAM 基地。两座门牙塔已掉。GAM 的基地岌岌可危。】'
+          content: '【现场解说：TES 带着远古龙 Buff 直奔 GAM 基地！两座门牙塔已掉！GAM 的基地岌岌可危！】'
         },
         {
           type: 'text', speaker: null,
-          content: '【但 Kiaya 奥恩复活了！他用大招清兵线！Sty1e 的卡莉斯塔在泉水门口插矛！】'
+          content: '【现场解说：但 Kiaya 奥恩复活了！他用大招清兵线！Sty1e 的卡莉斯塔在泉水门口插矛！】'
         },
         {
           type: 'text', speaker: 'jackey',
@@ -661,17 +738,36 @@ const CHAPTER1_DATA = {
         },
         {
           type: 'text', speaker: null,
-          content: '【Knight 阿狸和 JackeyLove 卢锡安在扛塔输出。死歌的复活倒计时还剩十秒。基地还差最后一下——但瑟提复活了！】'
+          content: '【现场解说：Knight 阿狸和 JackeyLove 卢锡安在扛塔输出。死歌的复活倒计时还剩十秒。基地还差最后一下——但瑟提复活了！】',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: null,
+          content: '【现场解说：Knight 阿狸和 JackeyLove 卢锡安在扛塔输出。佛耶戈的复活倒计时还剩十秒。基地还差最后一下——但瑟提复活了！】',
+          condition: (s) => s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: 'wayward',
-          content: '（历史里……我在这里选择了扛塔。结果被奥恩控住，死歌复活唱 R，瑟提抱人——被反一波。这次——）'
+          content: '（历史里……我在这里选择了扛塔。结果被奥恩控住，死歌复活唱 R，瑟提抱人——被反一波。这次——）',
+          condition: (s) => s.flags.has('picked_croc') || !s.flags.has('picked_gnar')
+        },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（历史里我如果选了纳尔扛塔——手短被瑟提抱走，输出不够。这次不能重蹈覆辙。）',
+          condition: (s) => s.flags.has('picked_gnar')
         }
       ],
       choices: [
         {
           text: '鳄鱼顶前面扛塔，让队友全力输出！（历史失误）',
           next: 'ch1_bad_01',
+          condition: (s) => s.flags.has('picked_croc') || !s.flags.has('picked_gnar'),
+          effect: (s) => { s.flags.add('tanked_tower_mistake'); }
+        },
+        {
+          text: '纳尔变大顶前面扛塔，让队友全力输出！（历史失误）',
+          next: 'ch1_bad_01',
+          condition: (s) => s.flags.has('picked_gnar'),
           effect: (s) => { s.flags.add('tanked_tower_mistake'); }
         },
         {
@@ -689,7 +785,7 @@ const CHAPTER1_DATA = {
         { type: 'bg', asset: 'assets/bg/stage.jpg', transition: 'fade' },
         {
           type: 'text', speaker: null,
-          content: '【GAM 基地爆炸！TES 拿下第一场！】'
+          content: '【纽约现场 · GAM 基地爆炸！TES 拿下第一场！】'
         },
         { type: 'cg', asset: 'assets/cg/match_victory.jpg', overlay: 'VICTORY · 首胜', darken: true, duration: 0 },
         {
@@ -708,6 +804,21 @@ const CHAPTER1_DATA = {
           type: 'text', speaker: 'wayward',
           content: '（至少……没有输越南。）'
         },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（ban 掉死歌是对的，Levi 没了绝活，整场都没声音。）',
+          condition: (s) => s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（鳄鱼前期压线确实爽，但后期拆家那波有点乏力。）',
+          condition: (s) => s.flags.has('picked_croc')
+        },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（纳尔团战那巴掌拍得好，但拆家时手短是真的难受。）',
+          condition: (s) => s.flags.has('picked_gnar')
+        },
         { type: 'char', id: 'coach', pos: 'center', enter: 'fade' },
         {
           type: 'text', speaker: 'coach',
@@ -719,11 +830,15 @@ const CHAPTER1_DATA = {
         },
         {
           type: 'text', speaker: 'coach',
-          content: '后面还有 RGE 和 DRX 两场。输一场就可能 3-3，要看别人脸色。必须两场全赢才能 4-2 出线。'
+          content: 'DRX 刚才赢了 RGE。我们 2-2，后面两场必须全赢才能 4-2 出线。输一场就可能 3-3，看别人脸色。'
         },
         {
           type: 'text', speaker: null,
           content: '赢了 GAM，打破了"输越南"的魔咒。但真正的考验——是后面两场。命运的齿轮还在转动。'
+        },
+        {
+          type: 'text', speaker: 'wayward',
+          content: '（赢了 GAM，至少没有输越南。但真正的考验是 RGE 和 DRX……历史里我们两场都输了。这次，我要改变更多。）'
         },
         {
           type: 'text', speaker: null,
@@ -747,11 +862,33 @@ const CHAPTER1_DATA = {
         { type: 'bg', asset: 'assets/bg/stage.jpg', transition: 'fade' },
         {
           type: 'text', speaker: null,
-          content: 'Wayward 鳄鱼扛塔冲了进去——但奥恩的大招把他撞飞在塔下。死歌复活唱 R，瑟提从侧面包了过来。'
+          content: 'Wayward 鳄鱼扛塔冲了进去——但奥恩的大招把他撞飞在塔下。死歌复活唱 R，瑟提从侧面包了过来。',
+          condition: (s) => (s.flags.has('picked_croc') || !s.flags.has('picked_gnar')) && !s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: null,
-          content: 'Knight 阿狸被死歌 R 炸死在泉水门口。JackeyLove 被瑟提抱走。Tian 男枪换掉了奥恩，但 GAM 剩下三人已经开始反推。'
+          content: 'Wayward 纳尔变大扛塔冲了进去——但纳尔手短够不到后排，被瑟提抱走！死歌复活唱 R，全员残血！',
+          condition: (s) => s.flags.has('picked_gnar') && !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: null,
+          content: 'Wayward 鳄鱼扛塔冲了进去——但奥恩的大招把他撞飞在塔下！瑟提绕后抱人！佛耶戈捡魂触发——TES 全员崩溃！',
+          condition: (s) => (s.flags.has('picked_croc') || !s.flags.has('picked_gnar')) && s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: null,
+          content: 'Wayward 纳尔变大扛塔冲了进去——但纳尔手短够不到后排，被瑟提抱走！佛耶戈捡魂收割——全员阵亡！',
+          condition: (s) => s.flags.has('picked_gnar') && s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: null,
+          content: 'Knight 阿狸被死歌 R 炸死在泉水门口。JackeyLove 被瑟提抱走。Tian 男枪换掉了奥恩，但 GAM 剩下三人已经开始反推。',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: null,
+          content: 'Knight 阿狸被瑟提抱摔秒杀。JackeyLove 被佛耶戈捡魂追死。Tian 男枪换掉了奥恩，但 GAM 剩下三人已经开始反推。',
+          condition: (s) => s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: 'wayward',
@@ -767,7 +904,13 @@ const CHAPTER1_DATA = {
         },
         {
           type: 'text', speaker: null,
-          content: 'GAM 的选手们从椅子上跳了起来。Levi 的死歌——我们没 ban 的死歌——成了全场的噩梦。'
+          content: 'GAM 的选手们从椅子上跳了起来。Levi 的死歌——我们没 ban 的死歌——成了全场的噩梦。',
+          condition: (s) => !s.flags.has('ban_karthus')
+        },
+        {
+          type: 'text', speaker: null,
+          content: 'GAM 的选手们从椅子上跳了起来。Levi 的佛耶戈在团战中收割了残局。',
+          condition: (s) => s.flags.has('ban_karthus')
         },
         {
           type: 'text', speaker: null,
